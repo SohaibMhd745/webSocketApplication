@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
@@ -56,14 +57,14 @@ class GameRoom {
 
     startGame() {
         if (this.gameState !== 'waiting') return;
-        
+
         this.gameState = 'playing';
         this.currentQuestionIndex = 0;
-        
+
         // Sélectionner des questions aléatoires
         this.gameQuestions = this.shuffleArray([...questions])
             .slice(0, GAME_CONFIG.QUESTIONS_PER_GAME);
-        
+
         this.sendNextQuestion();
     }
 
@@ -101,7 +102,7 @@ class GameRoom {
         const isCorrect = answer === this.currentQuestion.answer;
         const timeElapsed = Date.now() - this.questionStartTime;
         const timeBonus = Math.max(0, GAME_CONFIG.QUESTION_TIME - timeElapsed) / 1000;
-        
+
         let points = 0;
         if (isCorrect) {
             points = GAME_CONFIG.POINTS_PER_CORRECT_ANSWER + Math.floor(timeBonus * 10);
@@ -148,7 +149,7 @@ class GameRoom {
     endGame() {
         this.gameState = 'finished';
         const finalLeaderboard = this.getLeaderboard();
-        
+
         io.to(this.roomId).emit('game-finished', {
             leaderboard: finalLeaderboard
         });
@@ -194,7 +195,7 @@ io.on('connection', (socket) => {
 
     socket.on('join-room', (data) => {
         const { roomId, username } = data;
-        
+
         if (!roomId || !username) {
             socket.emit('error', 'Room ID et nom d\'utilisateur requis');
             return;
@@ -206,18 +207,18 @@ io.on('connection', (socket) => {
         }
 
         const room = rooms.get(roomId);
-        
+
         // Vérifier si le nom d'utilisateur est déjà pris
         const existingPlayer = Array.from(room.players.values())
             .find(player => player.username === username);
-        
+
         if (existingPlayer) {
             socket.emit('error', 'Ce nom d\'utilisateur est déjà pris dans cette salle');
             return;
         }
 
         room.addPlayer(socket, username);
-        
+
         socket.emit('joined-room', {
             roomId: roomId,
             username: username,
@@ -255,13 +256,13 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('Déconnexion:', socket.id);
-        
+
         // Retirer le joueur de toutes les salles
         for (const room of rooms.values()) {
             if (room.players.has(socket.id)) {
                 const player = room.players.get(socket.id);
                 room.removePlayer(socket.id);
-                
+
                 // Informer les autres joueurs
                 io.to(room.roomId).emit('players-update', room.getPlayersInfo());
                 io.to(room.roomId).emit('room-message', `${player.username} a quitté la salle`);

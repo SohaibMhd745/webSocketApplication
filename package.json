@@ -8,13 +8,19 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "dotenv": "^17.0.1",
     "express": "^4.18.2",
     "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
   },
-  "keywords": ["quiz", "socketio", "realtime", "game"],
+  "keywords": [
+    "quiz",
+    "socketio",
+    "realtime",
+    "game"
+  ],
   "author": "",
   "license": "MIT"
-} 
+}

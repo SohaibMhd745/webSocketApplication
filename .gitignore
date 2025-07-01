@@ -1,1 +1,15 @@
-/node_modules
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Env
+.env
+
+# Terraform
+terraform.tfvars
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# OS
+.DS_Store
