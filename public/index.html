@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz en Temps Réel</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Écran de connexion -->
+        <div id="login-screen" class="screen active">
+            <div class="card">
+                <h1>🎯 Quiz en Temps Réel</h1>
+                <p class="subtitle">Rejoignez une salle et testez vos connaissances !</p>
+                
+                <form id="join-form">
+                    <div class="input-group">
+                        <label for="username">Nom d'utilisateur</label>
+                        <input type="text" id="username" placeholder="Entrez votre pseudo" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="room-id">ID de la salle</label>
+                        <input type="text" id="room-id" placeholder="ID de la salle" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Rejoindre la salle</button>
+                </form>
+                
+                <div class="quick-actions">
+                    <button id="random-room" class="btn btn-secondary">Créer une salle aléatoire</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Salle d'attente -->
+        <div id="waiting-room" class="screen">
+            <div class="card">
+                <h2>Salle: <span id="current-room-id"></span></h2>
+                <p>En attente des autres joueurs...</p>
+                
+                <div class="players-section">
+                    <h3>Joueurs connectés</h3>
+                    <div id="players-list"></div>
+                </div>
+                
+                <div class="game-controls">
+                    <button id="start-game-btn" class="btn btn-primary">Commencer le quiz</button>
+                    <button id="leave-room-btn" class="btn btn-secondary">Quitter la salle</button>
+                </div>
+                
+                <div id="room-messages" class="messages"></div>
+            </div>
+        </div>
+
+        <!-- Écran de jeu -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <div class="game-info">
+                    <span id="question-counter">Question 1/5</span>
+                    <span id="question-category" class="category-badge"></span>
+                </div>
+                <div class="timer-container">
+                    <div id="timer" class="timer">15</div>
+                    <div id="timer-bar" class="timer-bar">
+                        <div id="timer-progress" class="timer-progress"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <h2 id="current-question" class="question-text"></h2>
+                
+                <div id="options-container" class="options-grid">
+                    <!-- Les options seront générées dynamiquement -->
+                </div>
+                
+                <div id="answer-feedback" class="answer-feedback hidden">
+                    <div class="feedback-content">
+                        <span id="feedback-text"></span>
+                        <span id="points-earned"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="current-scores">
+                <h3>Scores actuels</h3>
+                <div id="live-leaderboard"></div>
+            </div>
+        </div>
+
+        <!-- Écran de résultats -->
+        <div id="results-screen" class="screen">
+            <div class="card">
+                <h2>🏆 Résultats du Quiz</h2>
+                
+                <div id="final-leaderboard" class="leaderboard">
+                    <!-- Le classement final sera généré dynamiquement -->
+                </div>
+                
+                <div class="game-controls">
+                    <button id="play-again-btn" class="btn btn-primary">Rejouer</button>
+                    <button id="new-room-btn" class="btn btn-secondary">Nouvelle salle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications toast -->
+    <div id="toast-container"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 

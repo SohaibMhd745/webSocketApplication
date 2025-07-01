@@ -1,0 +1,20 @@
+{
+  "name": "quiz-socketio",
+  "version": "1.0.0",
+  "description": "Quiz en temps réel avec Socket.IO",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["quiz", "socketio", "realtime", "game"],
+  "author": "",
+  "license": "MIT"
+} 
