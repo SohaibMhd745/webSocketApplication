@@ -6,7 +6,7 @@ npm-debug.log*
 .env
 
 # Terraform
-terraform.tfvars
+infra/terraform.tfvars
 *.tfstate
 *.tfstate.backup
 .terraform/
