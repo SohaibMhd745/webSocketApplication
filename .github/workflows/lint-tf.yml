@@ -26,6 +26,10 @@ jobs:
         run: tflint
         working-directory: infra
 
+      - name: Initialize Terraform
+        run: terraform init
+        working-directory: infra
+
       - name: Check Terraform format
         run: terraform fmt -check -recursive
         working-directory: infra
