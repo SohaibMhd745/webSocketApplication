@@ -1,22 +1,32 @@
 variable "do_token" {
-  type = string
+  description = "Token d'accès à l'API DigitalOcean"
+  type        = string
+}
+
+variable "ssh_pub_key" {
+  description = "Contenu de la clé publique SSH"
+  type        = string
 }
 
 variable "ssh_key_path" {
-  type = string
+  description = "Chemin absolu ou relatif vers la clé privée SSH"
+  type        = string
 }
 
 variable "droplet_name" {
-  type    = string
-  default = "quiz-app"
+  description = "Nom du droplet"
+  type        = string
+  default     = "quiz-app"
 }
 
 variable "region" {
-  type    = string
-  default = "fra1"
+  description = "Région DigitalOcean"
+  type        = string
+  default     = "fra1"
 }
 
 variable "size" {
-  type    = string
-  default = "s-1vcpu-1gb"
+  description = "Taille du droplet"
+  type        = string
+  default     = "s-1vcpu-1gb"
 }

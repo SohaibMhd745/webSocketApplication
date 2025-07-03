@@ -26,14 +26,22 @@ jobs:
         run: tflint
         working-directory: infra
 
-      - name: Initialize Terraform
-        run: terraform init
-        working-directory: infra
-
       - name: Check Terraform format
         run: terraform fmt -check -recursive
         working-directory: infra
 
+      - name: Créer le fichier de clé privée SSH
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > infra/id_rsa
+          chmod 600 infra/id_rsa
+
+      - name: Initialize Terraform
+        run: terraform init
+        working-directory: infra
+
       - name: Validate Terraform files
+        env:
+          TF_VAR_ssh_pub_key: ${{ secrets.SSH_PUB_KEY }}
+          TF_VAR_ssh_key_path: "./id_rsa"
         run: terraform validate
         working-directory: infra

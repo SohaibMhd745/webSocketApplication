@@ -5,8 +5,9 @@ npm-debug.log*
 # Env
 .env
 
-# Terraform
+# Deployment
 infra/terraform.tfvars
+infra/id_rsa
 *.tfstate
 *.tfstate.backup
 .terraform/
