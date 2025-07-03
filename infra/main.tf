@@ -12,10 +12,6 @@ provider "digitalocean" {
   token = var.do_token
 }
 
-locals {
-  ssh_pub_key = var.ssh_pub_key
-}
-
 data "digitalocean_ssh_key" "default" {
   name = "quiz-app-key"
 }
