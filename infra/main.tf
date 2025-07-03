@@ -22,11 +22,11 @@ resource "digitalocean_ssh_key" "default" {
 }
 
 resource "digitalocean_droplet" "web" {
-  name              = var.droplet_name
-  region            = var.region
-  size              = var.size
-  image             = "ubuntu-22-04-x64"
-  ssh_keys          = [digitalocean_ssh_key.default.id]
+  name               = var.droplet_name
+  region             = var.region
+  size               = var.size
+  image              = "ubuntu-22-04-x64"
+  ssh_keys           = [digitalocean_ssh_key.default.id]
   private_networking = true
 
   connection {
