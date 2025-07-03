@@ -6,10 +6,6 @@ variable "ssh_key_path" {
   type = string
 }
 
-variable "ssh_pub_key" {
-  type = string
-}
-
 variable "droplet_name" {
   type    = string
   default = "quiz-app"

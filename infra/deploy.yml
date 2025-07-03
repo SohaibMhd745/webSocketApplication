@@ -1,0 +1,40 @@
+- hosts: quiz_server
+  become: yes
+  tasks:
+    - name: Mettre à jour apt
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+
+    - name: Installer curl et git
+      apt:
+        name:
+          - curl
+          - git
+        state: present
+
+    - name: Installer Node.js (version 18)
+      shell: curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+      args:
+        executable: /bin/bash
+
+    - name: Installer nodejs
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Cloner le repo de l'app
+      git:
+        repo: https://github.com/SohaibMhd745/webSocketApplication.git
+        dest: /root/app
+        version: main
+
+    - name: Installer les dépendances npm
+      npm:
+        path: /root/app
+        production: yes
+
+    - name: Lancer l'application (en arrière-plan)
+      shell: npm run start
+      args:
+        chdir: /root/app

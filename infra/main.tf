@@ -1,10 +1,23 @@
+terraform {
+  required_providers {
+    digitalocean = {
+      source  = "digitalocean/digitalocean"
+      version = "~> 2.0"
+    }
+  }
+}
+
 provider "digitalocean" {
   token = var.do_token
 }
 
+locals {
+  ssh_pub_key = file("~/.ssh/id_rsa.pub")
+}
+
 resource "digitalocean_ssh_key" "default" {
   name       = "quiz-app-key"
-  public_key = var.ssh_pub_key
+  public_key = local.ssh_pub_key
 }
 
 resource "digitalocean_droplet" "web" {
@@ -20,16 +33,5 @@ resource "digitalocean_droplet" "web" {
     user        = "root"
     private_key = file(var.ssh_key_path)
     host        = self.ipv4_address
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "apt update",
-      "apt install -y nodejs npm git",
-      "git clone https://github.com/SohaibMhd745/webSocketApplication.git app",
-      "cd app",
-      "npm install",
-      "npm run start &"
-    ]
   }
 }
