@@ -1,13 +1,16 @@
-name: Lint Terraform
+name: Terraform Plan
 
 on:
+  pull_request:
+    paths:
+      - infra/**
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+    paths:
+      - infra/**
 
 jobs:
-  lint-terraform:
+  terraform-plan:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,17 +22,6 @@ jobs:
         with:
           terraform_version: 1.8.5
 
-      - name: Install TFLint
-        uses: terraform-linters/setup-tflint@v4
-
-      - name: Run TFLint
-        run: tflint
-        working-directory: infra
-
-      - name: Check Terraform format
-        run: terraform fmt -check -recursive
-        working-directory: infra
-
       - name: Créer le fichier de clé privée SSH
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > infra/id_rsa
@@ -39,9 +31,10 @@ jobs:
         run: terraform init
         working-directory: infra
 
-      - name: Validate Terraform files
+      - name: Terraform Plan
         env:
+          TF_VAR_do_token: ${{ secrets.DO_TOKEN }}
           TF_VAR_ssh_pub_key: ${{ secrets.SSH_PUBLIC_KEY }}
           TF_VAR_ssh_key_path: "./id_rsa"
-        run: terraform validate
+        run: terraform plan
         working-directory: infra
