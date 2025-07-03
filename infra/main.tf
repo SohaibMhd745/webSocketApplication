@@ -16,9 +16,8 @@ locals {
   ssh_pub_key = var.ssh_pub_key
 }
 
-resource "digitalocean_ssh_key" "default" {
-  name       = "quiz-app-key"
-  public_key = local.ssh_pub_key
+data "digitalocean_ssh_key" "default" {
+  name = "quiz-app-key"
 }
 
 resource "digitalocean_droplet" "web" {
@@ -26,7 +25,7 @@ resource "digitalocean_droplet" "web" {
   region             = var.region
   size               = var.size
   image              = "ubuntu-22-04-x64"
-  ssh_keys           = [digitalocean_ssh_key.default.id]
+  ssh_keys           = [data.digitalocean_ssh_key.default.id]
   private_networking = true
 
   connection {
