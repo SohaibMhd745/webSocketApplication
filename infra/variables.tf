@@ -3,11 +3,6 @@ variable "do_token" {
   type        = string
 }
 
-variable "ssh_pub_key" {
-  description = "Contenu de la clé publique SSH"
-  type        = string
-}
-
 variable "ssh_key_path" {
   description = "Chemin absolu ou relatif vers la clé privée SSH"
   type        = string
