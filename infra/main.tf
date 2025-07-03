@@ -12,6 +12,10 @@ provider "digitalocean" {
   token = var.do_token
 }
 
+locals {
+  ssh_pub_key = var.ssh_pub_key
+}
+
 data "digitalocean_ssh_key" "default" {
   name = "quiz-app-key"
 }
@@ -22,7 +26,6 @@ resource "digitalocean_droplet" "web" {
   size               = var.size
   image              = "ubuntu-22-04-x64"
   ssh_keys           = [data.digitalocean_ssh_key.default.id]
-  private_networking = true
 
   connection {
     type        = "ssh"
