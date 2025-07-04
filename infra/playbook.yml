@@ -33,6 +33,11 @@
       register: result_node
       until: result_node is succeeded
 
+    - name: Install pm2 globally
+      npm:
+        name: pm2
+        global: yes
+
     - name: Clone the application repository
       git:
         repo: https://github.com/SohaibMhd745/webSocketApplication.git
@@ -44,7 +49,13 @@
         path: "{{ app_dir }}"
         production: yes
 
-    - name: Start the application
-      shell: npm run start
+    - name: Start the application with pm2
+      shell: pm2 start npm --name quiz-socketio -- run start
       args:
         chdir: "{{ app_dir }}"
+
+    - name: Save PM2 process list
+      shell: pm2 save
+
+    - name: Setup PM2 to start on boot
+      shell: pm2 startup systemd -u root --hp /root
