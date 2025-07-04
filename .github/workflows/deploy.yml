@@ -40,7 +40,7 @@ jobs:
       - name: Get Droplet IP
         id: get_ip
         run: |
-          ip=$(terraform output -raw public_ip)
+          ip=$(terraform output -raw droplet_ip)
           echo "DROPLET_IP=$ip" >> $GITHUB_ENV
         working-directory: infra
 
