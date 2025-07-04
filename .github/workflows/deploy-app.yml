@@ -8,33 +8,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Create private key file
+      - name: Clone application repository in /app
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > infra/id_rsa
-          chmod 600 infra/id_rsa
+          git clone https://github.com/SohaibMhd745/webSocketApplication.git /app
 
-      - name: Use Terraform output to get created droplet IP
-        id: tf-output
+      - name: Get droplet IP (Terraform output)
         run: |
-          cd infra
+          cd /app/infra
           terraform init
           terraform output -raw droplet_ip > droplet_ip.txt
 
-      - name: Generate hosts.ini file dynamically
+      - name: Replace IP in hosts.ini
         run: |
-          IP=$(cat infra/droplet_ip.txt)
-          echo "[quiz_server]" > infra/hosts.ini
-          echo "$IP ansible_user=root ansible_ssh_private_key_file=./id_rsa" >> infra/hosts.ini
+          IP=$(cat /app/infra/droplet_ip.txt)
+          echo "[quiz_server]" > /app/infra/hosts.ini
+          echo "$IP ansible_user=root ansible_ssh_private_key_file=./id_rsa" >> /app/infra/hosts.ini
+
+      - name: Copy SSH private key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /app/infra/id_rsa
+          chmod 600 /app/infra/id_rsa
 
       - name: Install Ansible
         run: sudo apt-get update && sudo apt-get install -y ansible
 
-      - name: Deploy application with Ansible
+      - name: Start Ansible playbook
         run: |
-          ansible-playbook -i infra/hosts.ini infra/deploy.yml
+          ansible-playbook -i /app/infra/hosts.ini /app/infra/deploy.yml
