@@ -1,13 +1,15 @@
-require('dotenv').config();
-const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
-const fs = require('fs');
-const path = require('path');
+import dotenv from 'dotenv';
+import express from 'express';
+import http from 'http';
+import { Server as SocketIo } from 'socket.io';
+import fs from 'fs';
+import path from 'path';
+
+dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = new SocketIo(server);
 
 // Servir les fichiers statiques
 app.use(express.static(path.join(__dirname, 'public')));
