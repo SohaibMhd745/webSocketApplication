@@ -8,25 +8,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clone application repository in /app
+      - name: Cloner le repo de l'app dans ./app
         run: |
-          git clone https://github.com/SohaibMhd745/webSocketApplication.git /app
+          git clone https://github.com/SohaibMhd745/webSocketApplication.git ./app
 
       - name: Get droplet IP (Terraform output)
         run: |
-          cd /app/infra
+          cd ./app/infra
           terraform init
           terraform output -raw droplet_ip > droplet_ip.txt
 
       - name: Replace IP in hosts.ini
         run: |
-          IP=$(cat /app/infra/droplet_ip.txt)
-          echo "[quiz_server]" > /app/infra/hosts.ini
-          echo "$IP ansible_user=root ansible_ssh_private_key_file=./id_rsa" >> /app/infra/hosts.ini
+          IP=$(cat ./app/infra/droplet_ip.txt)
+          echo "[quiz_server]" > ./app/infra/hosts.ini
+          echo "$IP ansible_user=root ansible_ssh_private_key_file=./id_rsa" >> ./app/infra/hosts.ini
 
       - name: Copy SSH private key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /app/infra/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ./app/infra/id_rsa
           chmod 600 /app/infra/id_rsa
 
       - name: Install Ansible
@@ -34,4 +34,4 @@ jobs:
 
       - name: Start Ansible playbook
         run: |
-          ansible-playbook -i /app/infra/hosts.ini /app/infra/deploy.yml
+          ansible-playbook -i ./app/infra/hosts.ini ./app/infra/deploy.yml
