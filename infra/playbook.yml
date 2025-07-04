@@ -1,7 +1,7 @@
 - hosts: quiz_server
   become: yes
   vars:
-    nodejs_version: "18"
+    nodejs_version: "22"
     app_dir: "/root/app"
 
   tasks:
