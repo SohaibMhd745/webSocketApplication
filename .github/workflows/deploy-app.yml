@@ -1,0 +1,40 @@
+name: Deploy App with Ansible
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Create private key file
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > infra/id_rsa
+          chmod 600 infra/id_rsa
+
+      - name: Use Terraform output to get created droplet IP
+        id: tf-output
+        run: |
+          cd infra
+          terraform init
+          terraform output -raw droplet_ip > droplet_ip.txt
+
+      - name: Generate hosts.ini file dynamically
+        run: |
+          IP=$(cat infra/droplet_ip.txt)
+          echo "[quiz_server]" > infra/hosts.ini
+          echo "$IP ansible_user=root ansible_ssh_private_key_file=./id_rsa" >> infra/hosts.ini
+
+      - name: Install Ansible
+        run: sudo apt-get update && sudo apt-get install -y ansible
+
+      - name: Deploy application with Ansible
+        run: |
+          ansible-playbook -i infra/hosts.ini infra/deploy.yml
